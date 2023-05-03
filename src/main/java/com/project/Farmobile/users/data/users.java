@@ -37,4 +37,13 @@ public class users {
 
     @Column(name = "active")
     private Boolean active;
+
+    public users(String name, String surname, String email, Roles role, String password, Boolean active) {
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.role = role;
+        this.password = password;
+        this.active = active;
+    }
 }
