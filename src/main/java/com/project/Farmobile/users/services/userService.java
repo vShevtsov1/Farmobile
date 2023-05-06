@@ -1,10 +1,8 @@
 package com.project.Farmobile.users.services;
 
 import com.project.Farmobile.config.TokenServices;
-import com.project.Farmobile.users.data.DTO.LoginDTO;
-import com.project.Farmobile.users.data.DTO.LoginResponseDTO;
-import com.project.Farmobile.users.data.DTO.registerDTO;
-import com.project.Farmobile.users.data.DTO.registerResponseDTO;
+import com.project.Farmobile.mail.emailController;
+import com.project.Farmobile.users.data.DTO.*;
 import com.project.Farmobile.users.data.help.Roles;
 import com.project.Farmobile.users.data.help.status;
 import com.project.Farmobile.users.data.users;
@@ -17,25 +15,27 @@ public class userService {
 
     private final userRepo userRepo;
     private final PasswordEncoder passwordEncoder;
-    private final TokenServices token;
+    private final TokenServices tokenServices;
+    private final emailController emailController;
 
-    public userService(userRepo userRepo, PasswordEncoder passwordEncoder, TokenServices token) {
+    public userService(userRepo userRepo, PasswordEncoder passwordEncoder, TokenServices tokenServices, emailController emailController) {
         this.userRepo = userRepo;
         this.passwordEncoder = passwordEncoder;
-        this.token = token;
+        this.tokenServices = tokenServices;
+        this.emailController = emailController;
     }
 
     public LoginResponseDTO login(LoginDTO loginDTO){
         users loginUsers = userRepo.findByEmail(loginDTO.getEmail());
         if(loginUsers.getActive()){
             if(passwordEncoder.matches(loginDTO.getPassword(),loginUsers.getPassword())){
-                return new LoginResponseDTO(status.OK,token.generateTokenUser(loginUsers,loginDTO.getRememberMe()),loginUsers.getRole());
+                return new LoginResponseDTO(status.OK,tokenServices.generateTokenUser(loginUsers,loginDTO.getRememberMe()),loginUsers.getRole());
             }
             else {
-                return new LoginResponseDTO(status.FAILED,"", Roles.valueOf(""));
+                return new LoginResponseDTO(status.FAILED,"", Roles.UNDEFINED);
             }
         }
-        return new LoginResponseDTO(status.FAILED,"", Roles.valueOf(""));
+        return new LoginResponseDTO(status.FAILED,"", Roles.UNDEFINED);
     }
 
     public registerResponseDTO register(registerDTO registerDTO){
@@ -44,7 +44,52 @@ public class userService {
             return  new registerResponseDTO(status.FAILED);
         }
         else {
+            emailController.SendConfirmationMail(tokenServices.generateTokenActivation(users),users);
             return  new registerResponseDTO(status.OK);
         }
     }
+
+    public status activation(String token){
+        if(tokenServices.validateTokenActivation(token)){
+            users activationUsers = userRepo.findByEmail(tokenServices.getMailActivation(token));
+            if(activationUsers == null){
+                return status.FAILED;
+            }
+            else {
+                if(activationUsers.getActive()){
+                    return status.FAILED;
+                }
+                else {
+                    activationUsers.setActive(true);
+                    userRepo.save(activationUsers);
+                    return status.OK;
+                }
+            }
+        }
+        else {
+            return status.FAILED;
+        }
+    }
+    public status forgotPassword(String email){
+        users forgotPasswordUser = userRepo.findByEmail(email);
+            if(forgotPasswordUser == null){
+                return status.FAILED;
+            }
+            else {
+                emailController.SendResetPasswordMail(tokenServices.generateTokenActivation(forgotPasswordUser),forgotPasswordUser);
+                return status.OK;
+            }
+        }
+    public status resetPassword(String token, resetPasswordDTO resetPasswordDTO){
+        users resetPasswordUser = userRepo.findByEmail(tokenServices.getMailActivation(token));
+        if(resetPasswordUser == null){
+            return status.FAILED;
+        }
+        else {
+            resetPasswordUser.setPassword(passwordEncoder.encode(resetPasswordDTO.getPassword()));
+            userRepo.save(resetPasswordUser);
+            return status.OK;
+        }
+    }
+
 }

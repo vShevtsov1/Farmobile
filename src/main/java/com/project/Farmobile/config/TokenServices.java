@@ -17,6 +17,8 @@ public class TokenServices {
 
     @Value("${jwt.secret}")
     private String jwtSecret;
+    @Value("${jwt.secret.activation}")
+    private String jwtSecretActivation;
 
     public String generateTokenUser(users user,Boolean remember) {
         Date date;
@@ -34,10 +36,26 @@ public class TokenServices {
                 signWith(SignatureAlgorithm.HS256, jwtSecret).compact();
         return jws;
     }
+    public String generateTokenActivation(users user) {
+        Date date =  Date.from(Instant.now().plus(1, ChronoUnit.DAYS));
+        String jws = Jwts.builder().
+                setSubject(user.getEmail()).
+                setExpiration(date).
+                signWith(SignatureAlgorithm.HS256, jwtSecretActivation).compact();
+        return jws;
+    }
 
     public boolean validateToken(String token) {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
+            return true;
+        } catch (JwtException e) {
+            return false;
+        }
+    }
+    public boolean validateTokenActivation(String token) {
+        try {
+            Jwts.parser().setSigningKey(jwtSecretActivation).parseClaimsJws(token);
             return true;
         } catch (JwtException e) {
             return false;
@@ -55,6 +73,13 @@ public class TokenServices {
     public String getMail(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(jwtSecret)
+                .parseClaimsJws(token)
+                .getBody();
+        return claims.getSubject();
+    }
+    public String getMailActivation(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(jwtSecretActivation)
                 .parseClaimsJws(token)
                 .getBody();
         return claims.getSubject();
