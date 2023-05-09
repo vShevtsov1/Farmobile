@@ -24,4 +24,9 @@ public class questions {
     @Column(name = "answered")
     private Boolean answered;
 
+    public questions(String name, String phonenumber, Boolean answered) {
+        this.name = name;
+        this.phonenumber = phonenumber;
+        this.answered = answered;
+    }
 }
