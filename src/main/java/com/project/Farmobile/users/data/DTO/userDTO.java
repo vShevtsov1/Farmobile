@@ -1,16 +1,19 @@
-package com.project.Farmobile.questions.data.DTO;
+package com.project.Farmobile.users.data.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class createQuestionsDTO {
+public class userDTO {
+
+    private Long idusers;
+
     private String name;
 
-        private String phonenumber;
+    private String surname;
+
+    private String email;
 }

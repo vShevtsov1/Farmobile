@@ -4,6 +4,7 @@ import com.project.Farmobile.users.data.DTO.*;
 import com.project.Farmobile.users.data.help.Roles;
 import com.project.Farmobile.users.data.help.status;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import com.project.Farmobile.users.services.userService;
 
@@ -59,4 +60,9 @@ public class userController {
             return status.FAILED;
         }
     }
+    @GetMapping("/my-info")
+    private userDTO getMyInfo(Authentication authentication){
+        return userService.getMyInfo(authentication.getName());
+    }
+    
 }

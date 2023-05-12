@@ -1,6 +1,7 @@
 package com.project.Farmobile.products.data;
 
 import com.project.Farmobile.category.data.category;
+import com.project.Farmobile.photo.data.photo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,7 +26,7 @@ public class products {
     private Double price;
     @Column(name = "quantity")
     private Integer quantity;
-    @Column(name = "fullDescription")
+    @Column(name = "fullDescription",length = 1000)
     private String fullDescription;
     @Column(name = "productSpecs")
     private String productSpecs;
@@ -33,5 +34,9 @@ public class products {
     @OneToOne
     @JoinColumn(name = "category_idcategory")
     private category category;
+
+    @OneToOne
+    @JoinColumn(name="photo_idphoto")
+    private photo photo;
 
 }

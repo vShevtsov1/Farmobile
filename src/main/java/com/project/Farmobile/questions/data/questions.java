@@ -16,7 +16,7 @@ public class questions {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "idquestions")
-    private Long idquestions;
+        private Long idquestions;
     @Column(name = "name")
     private String name;
     @Column(name = "phonenumber")

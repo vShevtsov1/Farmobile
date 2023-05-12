@@ -1,6 +1,7 @@
 package com.project.Farmobile.mail;
 
 import com.project.Farmobile.users.data.users;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -21,19 +22,20 @@ public class emailController {
     @Value("${mail.reset.link}")
     private String resetLink;
     private emailTemplates emailTemplates;
+    private Properties prop;
 
-
-
-
-
-    public void SendConfirmationMail(String token, users user)
-    {
+    @Autowired
+    public emailController() {
         emailTemplates = new emailTemplates();
-        Properties prop = new Properties();
+        prop = new Properties();
         prop.put("mail.smtp.host", "smtp.gmail.com");
         prop.put("mail.smtp.port", "587");
         prop.put("mail.smtp.auth", "true");
         prop.put("mail.smtp.starttls.enable", "true");
+    }
+
+    public void SendConfirmationMail(String token, users user)
+    {
         Session session = Session.getInstance(prop,
                 new javax.mail.Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
@@ -63,12 +65,6 @@ public class emailController {
     }
     public void SendResetPasswordMail(String token, users user)
     {
-        emailTemplates = new emailTemplates();
-        Properties prop = new Properties();
-        prop.put("mail.smtp.host", "smtp.gmail.com");
-        prop.put("mail.smtp.port", "587");
-        prop.put("mail.smtp.auth", "true");
-        prop.put("mail.smtp.starttls.enable", "true");
         Session session = Session.getInstance(prop,
                 new javax.mail.Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {

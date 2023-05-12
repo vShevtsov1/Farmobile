@@ -43,6 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and();
         // Set permissions on endpoints
         http.authorizeRequests()
+                .mvcMatchers("/users/my-info").authenticated()
                 .anyRequest().permitAll();
         // Add JWT token filter
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
