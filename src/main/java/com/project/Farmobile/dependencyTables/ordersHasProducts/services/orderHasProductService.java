@@ -4,6 +4,7 @@ import com.project.Farmobile.dependencyTables.ordersHasProducts.data.DTO.orderHa
 import com.project.Farmobile.dependencyTables.ordersHasProducts.data.orderHasProduct;
 import com.project.Farmobile.dependencyTables.ordersHasProducts.services.orderHasProductRepo;
 import com.project.Farmobile.embedded.orderHasProductId;
+import com.project.Farmobile.orders.data.orders;
 import com.project.Farmobile.products.data.products;
 import org.springframework.stereotype.Service;
 
@@ -23,5 +24,8 @@ public class orderHasProductService {
         for (Map.Entry<products,Integer>products : orderHasProductDTO.getProducts().entrySet()) {
             orderHasProductRepo.save(new orderHasProduct(new orderHasProductId(),products.getKey(),orderHasProductDTO.getOrder(),products.getValue()));
         }
+    }
+    public List<orderHasProduct> getByOrder(orders orders){
+        return orderHasProductRepo.findAllByOrder(orders);
     }
 }

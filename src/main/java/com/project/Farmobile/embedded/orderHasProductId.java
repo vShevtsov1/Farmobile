@@ -14,7 +14,7 @@ public class orderHasProductId implements Serializable {
     private Long productId;
 
     @Column(name = "order_idorders")
-    private UUID ordersId;
+    private Long ordersId;
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

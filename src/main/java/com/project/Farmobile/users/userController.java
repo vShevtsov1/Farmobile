@@ -8,6 +8,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import com.project.Farmobile.users.services.userService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/user")
 public class userController {
@@ -64,5 +66,14 @@ public class userController {
     private userDTO getMyInfo(Authentication authentication){
         return userService.getMyInfo(authentication.getName());
     }
-    
+
+    @GetMapping("/all")
+    private Iterable<usersDTOAdmin> getAllUsers(){
+        return userService.getAllUsers();
+    }
+    @GetMapping("/change-role/{userId}/{role}")
+    public void updateUserRole(@PathVariable(name = "userId") Long userId,@PathVariable(name = "role") String role){
+        userService.changeUserRole(userId,role);
+    }
+
 }

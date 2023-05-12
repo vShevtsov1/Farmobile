@@ -17,6 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class userService {
@@ -118,6 +121,18 @@ public class userService {
         else {
             return users;
         }
+    }
+    public Iterable<usersDTOAdmin> getAllUsers(){
+        Iterable<users> allUsers = userRepo.findAll();
+        return StreamSupport.stream(allUsers.spliterator(), false)
+                .map(user -> modelMapper.map(user, usersDTOAdmin.class))
+                .collect(Collectors.toList());
+
+    }
+    public void changeUserRole(Long id,String role){
+        users users = userRepo.findById(id).get();
+        users.setRole(Roles.valueOf(role));
+        userRepo.save(users);
     }
 
 }

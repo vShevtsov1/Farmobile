@@ -20,10 +20,9 @@ import java.util.UUID;
 public class orders {
 
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "idorders")
-    private UUID idorders;
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Column(name = "idOrders")
+    private Long idOrders;
     @Column(name = "date")
     private Date date;
     @Column(name = "summ")
