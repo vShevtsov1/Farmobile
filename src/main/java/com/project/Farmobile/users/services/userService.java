@@ -110,5 +110,14 @@ public class userService {
             return modelMapper.map(users,userDTO.class);
         }
     }
+    public users getUserByMail(String mail){
+        users users = userRepo.findByEmail(mail);
+        if(users == null){
+            return null;
+        }
+        else {
+            return users;
+        }
+    }
 
 }

@@ -29,5 +29,7 @@ public class orderHasProduct {
     @MapsId("ordersId")
     @JoinColumn(name = "orders_idorders")
     private orders order;
+
+    private Integer count;
 }
 

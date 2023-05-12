@@ -36,4 +36,11 @@ public class orders {
     @JoinColumn(name = "users_idusers")
     private users users;
 
+    public orders(Date date, Double summ, String phoneNumber, String adress, com.project.Farmobile.users.data.users users) {
+        this.date = date;
+        this.summ = summ;
+        this.phoneNumber = phoneNumber;
+        this.adress = adress;
+        this.users = users;
+    }
 }
