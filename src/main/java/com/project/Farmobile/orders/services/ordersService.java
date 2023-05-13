@@ -51,7 +51,9 @@ public class ordersService {
         List<orderHasProduct> orderHasProducts = orderHasProductService.getByOrder(orders);
         List<products> products = new ArrayList<>();
         for (orderHasProduct ordersProducts:orderHasProducts) {
-            products.add(ordersProducts.getProducts());
+            for (int i = 0; i < ordersProducts.getCount(); i++) {
+                products.add(ordersProducts.getProducts());
+            }
         }
         return new orderDTO(orders.getIdOrders(),orders.getDate(),orders.getSumm(),orders.getPhoneNumber(),orders.getAdress(),userDTO,products);
     }
