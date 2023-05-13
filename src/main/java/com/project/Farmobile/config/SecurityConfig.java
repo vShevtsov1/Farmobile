@@ -1,5 +1,6 @@
 package com.project.Farmobile.config;
 
+import com.project.Farmobile.users.data.help.Roles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -43,7 +44,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and();
         // Set permissions on endpoints
         http.authorizeRequests()
-                .mvcMatchers("/users/my-info").authenticated()
+                .mvcMatchers("/user/my-info").authenticated()
+                .mvcMatchers("/orders/get-all").hasAnyRole(String.valueOf(Roles.ADMIN))
+                .mvcMatchers("/user/all").hasAnyRole(String.valueOf(Roles.ADMIN))
+                .mvcMatchers("/photo/upload").hasAnyRole(String.valueOf(Roles.ADMIN))
+                .mvcMatchers("/category/get").hasAnyRole(String.valueOf(Roles.ADMIN))
+                .mvcMatchers("/products/create").hasAnyRole(String.valueOf(Roles.ADMIN))
+                .mvcMatchers("/orders/id").hasAnyRole(String.valueOf(Roles.ADMIN))
                 .anyRequest().permitAll();
         // Add JWT token filter
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
